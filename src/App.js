@@ -9,15 +9,16 @@ function App() {
 	const [currentLocation, setCurrentLocation] = useState('comments/')
 	const [formUser, setFormUser] = useState('')
 	const [formComment, setFormComment] = useState('')
+	// console.log("testing: ", currentLocation);
 
 	useEffect(() => {
-		console.log("starting onvalue again because db changed");
-		const foundDb = ref(realtime, currentLocation)
+		// console.log("starting onvalue again because db changed");
+		const foundDb = ref(realtime, 'comments/')
 		onValue(foundDb, (snapshot) => {
-			console.log("during onvalue, current location: " + currentLocation);
+			// console.log("during onvalue, current location: " + currentLocation);
 			const myData = snapshot.val()
 			const commentArray = []
-			console.log("during onvalue, my data: ", myData);
+			// console.log("during onvalue, my data: ", myData);
 			for (let propertyName in myData) {
 				// create a new local object for each loop iteration:
 				const userComment = {
@@ -29,14 +30,15 @@ function App() {
 				}
 			}
 			setComments(commentArray)
+			// console.log("comments: ", commentArray);
 		})
-	}, [currentLocation])
+	}, [])
 
 	const handleSubmit = (event) => {
 		event.preventDefault()
 		// form logic
 		// add comment to realtime
-		console.log("adding new comment at: " + currentLocation)
+		// console.log("adding new comment at: " + currentLocation)
 		const foundDb = ref(realtime, currentLocation)
 		push(foundDb, {
 			user: formUser,
@@ -56,31 +58,81 @@ function App() {
 	}
 
 	// when a comment is clicked, it is found, and the new current location in the tree is that comment
+	// need to stop this from creating a duplicate of itself as a child
 	const onFinding = (element) => {
-		const newUserInfo = {
-			user: element.newComment.user,
-			userComment: element.newComment.userComment,
-			found: true,
+		console.log("element: ", element);
+		const oldLocation = currentLocation
+		let tempArray = currentLocation.split('/')
+		tempArray.pop()
+		const currentNode = tempArray.pop()
+		if (currentNode !== element.key){
+
+			const newUserInfo = {
+				user: element.newComment.user,
+				userComment: element.newComment.userComment,
+				found: true,
+			}
+			const newLocation = `${currentLocation}${element.key}/`
+			const foundDb = ref(realtime, newLocation)
+			update(foundDb, newUserInfo)
+			// console.log("during onFinding, new location: " + newLocation)
+			if (oldLocation === "comments/") {
+	
+				setCurrentLocation(newLocation)
+			}
 		}
-		const newLocation = `${currentLocation}${element.key}/`
-		const foundDb = ref(realtime, newLocation)
-		update(foundDb, newUserInfo)
-		console.log("during onFinding, new location: " + newLocation)
-		setCurrentLocation(newLocation)
-		console.log("during onFinding, current location: " + currentLocation);
+		// console.log("during onFinding, current location: " + currentLocation);
 	}
 
 	const onBack = () => {
 		if (currentLocation !== 'comments/') {
 			let tempArray = currentLocation.split('/')
-			console.log("during onBack, tempArray:" + tempArray);
+			// console.log("during onBack, tempArray:" + tempArray);
 			tempArray.pop()
 			tempArray.pop()
-			console.log(tempArray);
+			// console.log(tempArray);
 			const newLocation = tempArray.join('/') + `/`
-			console.log("during onBack, new location: " + newLocation)
+			// console.log("during onBack, new location: " + newLocation)
 			setCurrentLocation(newLocation)
 			// may need to force an update just to cause onValue to trigger?
+		}
+	}
+
+	// converts firebase entry objects into an array to map
+	const outputArray = (element) => {
+		let tempArray = []
+		for (let propertyName in element) {
+			if (element[propertyName].user) {
+				const userComment = {
+					key: propertyName,
+					newComment: element[propertyName]
+				}
+				tempArray.push(userComment)
+			}
+		}
+		console.log("temp array: ", tempArray);
+		return tempArray
+	}
+
+	// return true if the key of the current element is the current location
+	const isCurrentLocation = (element) => {
+		if (currentLocation === "comments/") {
+			return true
+		} else {
+			let tempArray = currentLocation.split(`/`)
+			tempArray.pop()
+			// get the current node we're on, by first removing the empty entry after /, then removing the highest node
+			const currentNode = tempArray.pop()
+			// console.log("filter array: ", tempArray);
+			return element.key === currentNode
+		}
+	}
+
+	const notTop = () => {
+		if (currentLocation === "comments/") {
+			return false
+		} else {
+			return true
 		}
 	}
 
@@ -100,13 +152,26 @@ function App() {
 				<button>Save</button>
 			</form>
 			<p>{currentLocation}</p>
-			<button onClick={(event) => {onBack()}}>Back</button>
+			<button onClick={(event) => { onBack() }}>Back</button>
 			<ul>
 				{
-					comments.map((element) => {
+					comments.filter((element) => { return isCurrentLocation(element) }).map((element) => {
 						return (
 							<li key={element.key} onClick={() => onFinding(element)} className={element.key}>
-								<p className={element.newComment.found ? "found" : "undiscovered"} >{element.newComment.user} says: {element.newComment.userComment}	</p>
+								<p className={element.newComment.found ? "found topLevel" : "undiscovered topLevel"} >{element.newComment.user} created room: {element.newComment.userComment}	</p>
+								<ul>
+									{
+										element.newComment && notTop() ?
+											outputArray(element.newComment).map((subElement) => {
+												return (
+													<li key={subElement.newComment.key} onClick={() => onFinding(subElement)}>
+														<p className={subElement.newComment.found ? "found2" : "undiscovered2"} >{subElement.newComment.user} says: {subElement.newComment.userComment}	</p>
+													</li>
+												)
+											})
+											: ''
+									}
+								</ul>
 							</li>
 						)
 					})}
