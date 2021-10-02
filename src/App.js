@@ -11,11 +11,13 @@ function App() {
 	const [formComment, setFormComment] = useState('')
 
 	useEffect(() => {
+		console.log("starting onvalue again because db changed");
 		const foundDb = ref(realtime, currentLocation)
 		onValue(foundDb, (snapshot) => {
+			console.log("during onvalue, current location: " + currentLocation);
 			const myData = snapshot.val()
 			const commentArray = []
-			console.log(myData);
+			console.log("during onvalue, my data: ", myData);
 			for (let propertyName in myData) {
 				// create a new local object for each loop iteration:
 				const userComment = {
@@ -34,7 +36,7 @@ function App() {
 		event.preventDefault()
 		// form logic
 		// add comment to realtime
-		console.log(currentLocation)
+		console.log("adding new comment at: " + currentLocation)
 		const foundDb = ref(realtime, currentLocation)
 		push(foundDb, {
 			user: formUser,
@@ -61,19 +63,25 @@ function App() {
 			found: true,
 		}
 		const newLocation = `${currentLocation}${element.key}/`
-		console.log(newLocation)
-		setCurrentLocation(newLocation)
-		const foundDb = ref(realtime, currentLocation)
+		const foundDb = ref(realtime, newLocation)
 		update(foundDb, newUserInfo)
+		console.log("during onFinding, new location: " + newLocation)
+		setCurrentLocation(newLocation)
+		console.log("during onFinding, current location: " + currentLocation);
 	}
 
 	const onBack = () => {
-		let newLocation = currentLocation.split('/')
-		const newLocation = `${currentLocation}${element.key}/`
-		console.log(newLocation)
-		setCurrentLocation(newLocation)
-		const foundDb = ref(realtime, currentLocation)
-		update(foundDb, newUserInfo)
+		if (currentLocation !== 'comments/') {
+			let tempArray = currentLocation.split('/')
+			console.log("during onBack, tempArray:" + tempArray);
+			tempArray.pop()
+			tempArray.pop()
+			console.log(tempArray);
+			const newLocation = tempArray.join('/') + `/`
+			console.log("during onBack, new location: " + newLocation)
+			setCurrentLocation(newLocation)
+			// may need to force an update just to cause onValue to trigger?
+		}
 	}
 
 	return (
@@ -91,6 +99,7 @@ function App() {
 				<input type="text" id="comment" value={formComment} onChange={handleChangeComment}></input>
 				<button>Save</button>
 			</form>
+			<p>{currentLocation}</p>
 			<button onClick={(event) => {onBack()}}>Back</button>
 			<ul>
 				{
