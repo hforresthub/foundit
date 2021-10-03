@@ -1,6 +1,4 @@
 import searchLogo from './search.svg'
-// from https://freesvg.org/room-interior
-import roomBackground from './saladeestar.svg'
 import { useState, useEffect } from 'react';
 import realtime from './firebase'
 import { ref, onValue, push, update } from "firebase/database";
@@ -8,11 +6,13 @@ import './App.css';
 
 function App() {
 	const [comments, setComments] = useState([])
+	const [users, setUsers] = useState([])
 	const [currentLocation, setCurrentLocation] = useState('comments/')
 	const [formUser, setFormUser] = useState('')
 	const [formComment, setFormComment] = useState('')
 	// console.log("testing: ", currentLocation);
 
+	// watch comment data
 	useEffect(() => {
 		// console.log("starting onvalue again because db changed");
 		const foundDb = ref(realtime, 'comments/')
@@ -36,6 +36,30 @@ function App() {
 		})
 	}, [])
 
+	// watch user data
+	useEffect(() => {
+		// console.log("starting onvalue again because db changed");
+		const userFoundDb = ref(realtime, 'users/')
+		onValue(userFoundDb, (snapshot) => {
+			// console.log("during onvalue, current location: " + currentLocation);
+			const myData = snapshot.val()
+			const userArray = []
+			// console.log("during onvalue, my data: ", myData);
+			for (let propertyName in myData) {
+				// create a new local object for each loop iteration:
+				const tempUser = {
+					key: propertyName,
+					userData: myData[propertyName]
+				}
+				if (myData[propertyName].user) {
+					userArray.push(tempUser)
+				}
+			}
+			setUsers(userArray)
+			// console.log("users: ", users);
+		})
+	}, [])
+
 	const handleSubmit = (event) => {
 		event.preventDefault()
 		// form logic
@@ -49,6 +73,17 @@ function App() {
 		});
 		//clear after
 		setFormComment('')
+
+		//update user
+		// console.log("filtered user: ", users.filter(element => element.key===formUser)[0]);
+		const currentUser = users.filter(element => element.key===formUser)[0]
+		const userFoundDb = ref(realtime, `users/${formUser}`)
+		const newUserInfo = {
+			user: formUser,
+			// foundPoints: currentUser.userData.foundPoints + 1,
+			undiscoveredPoints: currentUser.userData.undiscoveredPoints + 1,
+		}
+		update(userFoundDb, newUserInfo)
 	}
 
 	const handleChangeUser = function (event) {
@@ -67,7 +102,7 @@ function App() {
 		let tempArray = currentLocation.split('/')
 		tempArray.pop()
 		const currentNode = tempArray.pop()
-		if (currentNode !== element.key){
+		if (currentNode !== element.key && element.newComment.user !== formUser) {
 
 			const newUserInfo = {
 				user: element.newComment.user,
@@ -79,7 +114,7 @@ function App() {
 			update(foundDb, newUserInfo)
 			// console.log("during onFinding, new location: " + newLocation)
 			if (oldLocation === "comments/") {
-	
+
 				setCurrentLocation(newLocation)
 			}
 		}
@@ -138,6 +173,40 @@ function App() {
 		}
 	}
 
+	const highestFound = (prev, cur) => {
+		if (prev.userData.foundPoints >= cur.userData.foundPoints) {
+			console.log("prev: ", prev);
+			return prev
+		} else {
+			console.log("cur: ", cur);
+			return cur
+		}
+	}
+
+	const highestUndiscovered = (prev, cur) => {
+		if (prev.userData.undiscoveredPoints >= cur.userData.undiscoveredPoints) {
+			console.log("prev: ", prev);
+			return prev
+		} else {
+			console.log("cur: ", cur);
+			return cur
+		}
+	}
+
+	const displayHighScore = () => {
+		console.log("users: ", users);
+		return (
+			<ul>
+				<li key={users.reduce(highestFound).key} className="foundHigh">
+					<p>{users.reduce(highestFound).userData.user} found points: {users.reduce(highestFound).userData.foundPoints}</p>
+				</li>
+				<li key={users.reduce(highestUndiscovered).key} className="undiscoveredHigh">
+					<p>{users.reduce(highestUndiscovered).userData.user} undiscovered points: {users.reduce(highestUndiscovered).userData.undiscoveredPoints}</p>
+				</li>
+			</ul>
+		)
+	}
+
 	return (
 		<div className="App">
 			<header className="searchHeader">
@@ -155,8 +224,10 @@ function App() {
 			</form>
 			<p>{currentLocation}</p>
 			<button onClick={(event) => { onBack() }}>Back</button>
-			<div className="wrapper">
-
+			<div className="userData">
+				{
+					users.length > 0 ? displayHighScore() : ''
+				}
 			</div>
 			<ul>
 				{

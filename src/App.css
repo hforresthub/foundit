@@ -60,9 +60,22 @@ p {
 	background-color: grey;
 	color: lightgray;
 }
+.foundHigh {
+	background-color: darkgreen;
+	color: whitesmoke;
+	border: 2px solid darkgrey;
+	border-radius: 10px;
+}
+.undiscoveredHigh {
+	background-color: grey;
+	color: whitesmoke;
+	border: 2px solid darkgrey;
+	border-radius: 10px;
+}
 .inRoom {
 	height: 40vh;
 	background-color: white;
+	/* https://freesvg.org/room-interior */
 	background-image: url('./saladeestar.svg');
 	background-size: cover;
 	border: 2px solid darkgrey;
