@@ -65,6 +65,23 @@ function App() {
 		// form logic
 		// add comment to realtime
 		// console.log("adding new comment at: " + currentLocation)
+
+		// check if user exists, if not, create them
+		let currentUser = users.filter(element => element.key === formUser)[0]
+		if (!currentUser) {
+			// if user doesnt exist yet, create them
+			//update user
+			// console.log("filtered user: ", users.filter(element => element.key===formUser)[0]);
+			const userFoundDb = ref(realtime, `users/${formUser}`)
+			const newUserInfo = {
+				user: formUser,
+				foundPoints: 0,
+				undiscoveredPoints: 0,
+			}
+			update(userFoundDb, newUserInfo)
+			currentUser = { key: formUser, userData: newUserInfo }
+		}
+
 		const foundDb = ref(realtime, currentLocation)
 		push(foundDb, {
 			user: formUser,
@@ -76,7 +93,6 @@ function App() {
 
 		//update user
 		// console.log("filtered user: ", users.filter(element => element.key===formUser)[0]);
-		const currentUser = users.filter(element => element.key===formUser)[0]
 		const userFoundDb = ref(realtime, `users/${formUser}`)
 		const newUserInfo = {
 			user: formUser,
@@ -97,26 +113,58 @@ function App() {
 	// when a comment is clicked, it is found, and the new current location in the tree is that comment
 	// need to stop this from creating a duplicate of itself as a child
 	const onFinding = (element) => {
-		console.log("element: ", element);
+		// console.log("element: ", element);
+		let currentUser = users.filter(user => user.key === formUser)[0]
+		if (!currentUser) {
+			// if user doesnt exist yet, create them
+			//update user
+			// console.log("filtered user: ", users.filter(element => element.key===formUser)[0]);
+			const userFoundDb = ref(realtime, `users/${formUser}`)
+			const newUserInfo = {
+				user: formUser,
+				foundPoints: 0,
+				undiscoveredPoints: 0,
+			}
+			update(userFoundDb, newUserInfo)
+			currentUser = { key: formUser, userData: newUserInfo }
+		}
 		const oldLocation = currentLocation
 		let tempArray = currentLocation.split('/')
 		tempArray.pop()
 		const currentNode = tempArray.pop()
-		if (currentNode !== element.key && element.newComment.user !== formUser) {
+		const newLocation = `${currentLocation}${element.key}/`
+		// if the current user isnt the one who made this room/comment, set this room/comment as found and reward the user with a point
+		if (currentNode !== element.key && element.newComment.user !== formUser && formUser !== '') {
 
 			const newUserInfo = {
 				user: element.newComment.user,
 				userComment: element.newComment.userComment,
 				found: true,
 			}
-			const newLocation = `${currentLocation}${element.key}/`
 			const foundDb = ref(realtime, newLocation)
 			update(foundDb, newUserInfo)
 			// console.log("during onFinding, new location: " + newLocation)
-			if (oldLocation === "comments/") {
-
-				setCurrentLocation(newLocation)
+			// change points around for users
+			// award a point to the form user who found the comment
+			const userFoundDb = ref(realtime, `users/${formUser}`)
+			const foundUserInfo = {
+				foundPoints: currentUser.userData.foundPoints + 1,
 			}
+			update(userFoundDb, foundUserInfo)
+			// take away points from user whose comment was found
+			const userLostDb = ref(realtime, `users/${element.newComment.user}`)
+			// get user from list of users, whose name matches the current comment
+			let commentUser = users.filter(user => user.key === element.newComment.user)[0]
+			const lostUserInfo = {
+				undiscoveredPoints: commentUser.userData.undiscoveredPoints - 1,
+			}
+			update(userLostDb, lostUserInfo)
+		} else if (formUser === '') {
+			alert('Please enter a Username!')
+		}
+		if (oldLocation === "comments/" && formUser !== '') {
+
+			setCurrentLocation(newLocation)
 		}
 		// console.log("during onFinding, current location: " + currentLocation);
 	}
@@ -147,7 +195,7 @@ function App() {
 				tempArray.push(userComment)
 			}
 		}
-		console.log("temp array: ", tempArray);
+		// console.log("temp array: ", tempArray);
 		return tempArray
 	}
 
@@ -175,32 +223,32 @@ function App() {
 
 	const highestFound = (prev, cur) => {
 		if (prev.userData.foundPoints >= cur.userData.foundPoints) {
-			console.log("prev: ", prev);
+			// console.log("prev: ", prev);
 			return prev
 		} else {
-			console.log("cur: ", cur);
+			// console.log("cur: ", cur);
 			return cur
 		}
 	}
 
 	const highestUndiscovered = (prev, cur) => {
 		if (prev.userData.undiscoveredPoints >= cur.userData.undiscoveredPoints) {
-			console.log("prev: ", prev);
+			// console.log("prev: ", prev);
 			return prev
 		} else {
-			console.log("cur: ", cur);
+			// console.log("cur: ", cur);
 			return cur
 		}
 	}
 
 	const displayHighScore = () => {
-		console.log("users: ", users);
+		// console.log("users: ", users);
 		return (
 			<ul>
-				<li key={users.reduce(highestFound).key} className="foundHigh">
+				<li key={users.reduce(highestFound).key + "found"} className="foundHigh">
 					<p>{users.reduce(highestFound).userData.user} found points: {users.reduce(highestFound).userData.foundPoints}</p>
 				</li>
-				<li key={users.reduce(highestUndiscovered).key} className="undiscoveredHigh">
+				<li key={users.reduce(highestUndiscovered).key + "undiscovered"} className="undiscoveredHigh">
 					<p>{users.reduce(highestUndiscovered).userData.user} undiscovered points: {users.reduce(highestUndiscovered).userData.undiscoveredPoints}</p>
 				</li>
 			</ul>

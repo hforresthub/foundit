@@ -49,8 +49,8 @@ p {
 	color: white;
 }
 .undiscovered {
-	background-color: black;
-	color: lightgray;
+	background-color: darkgrey;
+	color: black;
 }
 .found2 {
 	background-color: lime;
