@@ -36,6 +36,8 @@ ul {
 }
 ul, li {
 	list-style: none;
+	filter: drop-shadow(10px 10px 4px lightgrey);
+	opacity: 1;
 }
 p {
 	padding: 1rem;
@@ -52,7 +54,7 @@ p {
 }
 .found2 {
 	background-color: lime;
-	color: white;
+	color: black;
 }
 .undiscovered2 {
 	background-color: grey;
@@ -60,9 +62,9 @@ p {
 }
 .inRoom {
 	height: 40vh;
+	background-color: white;
 	background-image: url('./saladeestar.svg');
 	background-size: cover;
-	opacity: 0.5;
-	border: 2px solid grey;
+	border: 2px solid darkgrey;
 	border-radius: 50px;
 }
