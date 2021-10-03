@@ -1,4 +1,6 @@
 import searchLogo from './search.svg'
+// from https://freesvg.org/room-interior
+import roomBackground from './saladeestar.svg'
 import { useState, useEffect } from 'react';
 import realtime from './firebase'
 import { ref, onValue, push, update } from "firebase/database";
@@ -138,8 +140,8 @@ function App() {
 
 	return (
 		<div className="App">
-			<header className="App-header">
-				<img src={searchLogo} className="App-logo" alt="logo" />
+			<header className="searchHeader">
+				<img src={searchLogo} className="searchLogo" alt="Magnifying glass logo" />
 				<h1>
 					Foundit
 				</h1>
@@ -149,17 +151,20 @@ function App() {
 				<input type="text" id="user" value={formUser} onChange={handleChangeUser}></input>
 				<label htmlFor="comment">comment:</label>
 				<input type="text" id="comment" value={formComment} onChange={handleChangeComment}></input>
-				<button>Save</button>
+				<button>Post</button>
 			</form>
 			<p>{currentLocation}</p>
 			<button onClick={(event) => { onBack() }}>Back</button>
+			<div className="wrapper">
+
+			</div>
 			<ul>
 				{
 					comments.filter((element) => { return isCurrentLocation(element) }).map((element) => {
 						return (
 							<li key={element.key} onClick={() => onFinding(element)} className={element.key}>
 								<p className={element.newComment.found ? "found topLevel" : "undiscovered topLevel"} >{element.newComment.user} created room: {element.newComment.userComment}	</p>
-								<ul>
+								<ul className="inRoom">
 									{
 										element.newComment && notTop() ?
 											outputArray(element.newComment).map((subElement) => {

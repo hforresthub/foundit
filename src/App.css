@@ -2,23 +2,27 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
+.searchLogo {
+  height: 20vmin;
+  padding: 1%;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+  .searchLogo {
+	animation: searchMove infinite 5s linear;
   }
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+@keyframes searchMove {
+	0% {
+		transform: rotate(-15deg);
+	}
+	50% {
+		transform: rotate(15deg);
+	}
+	100% {
+		transform: rotate(-15deg);
+	}
 }
 
 
@@ -39,7 +43,7 @@ p {
 	margin: 1rem;
 }
 .found {
-	background-color: red;
+	background-color: green;
 	color: white;
 }
 .undiscovered {
@@ -47,10 +51,18 @@ p {
 	color: lightgray;
 }
 .found2 {
-	background-color: orange;
+	background-color: lime;
 	color: white;
 }
 .undiscovered2 {
 	background-color: grey;
 	color: lightgray;
+}
+.inRoom {
+	height: 40vh;
+	background-image: url('./saladeestar.svg');
+	background-size: cover;
+	opacity: 0.5;
+	border: 2px solid grey;
+	border-radius: 50px;
 }
