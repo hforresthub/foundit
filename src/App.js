@@ -15,13 +15,10 @@ function App() {
 
 	// watch comment data
 	useEffect(() => {
-		// console.log("starting onvalue again because db changed");
 		const foundDb = ref(realtime, 'comments/')
 		onValue(foundDb, (snapshot) => {
-			// console.log("during onvalue, current location: " + currentLocation);
 			const myData = snapshot.val()
 			const commentArray = []
-			// console.log("during onvalue, my data: ", myData);
 			for (let propertyName in myData) {
 				// create a new local object for each loop iteration:
 				const userComment = {
@@ -33,19 +30,15 @@ function App() {
 				}
 			}
 			setComments(commentArray)
-			// console.log("comments: ", commentArray);
 		})
 	}, [])
 
 	// watch user data
 	useEffect(() => {
-		// console.log("starting onvalue again because db changed");
 		const userFoundDb = ref(realtime, 'users/')
 		onValue(userFoundDb, (snapshot) => {
-			// console.log("during onvalue, current location: " + currentLocation);
 			const myData = snapshot.val()
 			const userArray = []
-			// console.log("during onvalue, my data: ", myData);
 			for (let propertyName in myData) {
 				// create a new local object for each loop iteration:
 				const tempUser = {
@@ -57,7 +50,6 @@ function App() {
 				}
 			}
 			setUsers(userArray)
-			// console.log("users: ", users);
 		})
 	}, [])
 
@@ -65,14 +57,12 @@ function App() {
 		event.preventDefault()
 		// form logic
 		// add comment to realtime
-		// console.log("adding new comment at: " + currentLocation)
 
 		// check if user exists, if not, create them
 		let currentUser = users.filter(element => element.key === formUser)[0]
 		if (!currentUser) {
 			// if user doesnt exist yet, create them
 			//update user
-			// console.log("filtered user: ", users.filter(element => element.key===formUser)[0]);
 			const userFoundDb = ref(realtime, `users/${formUser}`)
 			const newUserInfo = {
 				user: formUser,
@@ -93,7 +83,6 @@ function App() {
 		setFormComment('')
 
 		//update user
-		// console.log("filtered user: ", users.filter(element => element.key===formUser)[0]);
 		const userFoundDb = ref(realtime, `users/${formUser}`)
 		const newUserInfo = {
 			user: formUser,
@@ -114,12 +103,10 @@ function App() {
 	// when a comment is clicked, it is found, and the new current location in the tree is that comment
 	// need to stop this from creating a duplicate of itself as a child
 	const onFinding = (element) => {
-		// console.log("element: ", element);
 		let currentUser = users.filter(user => user.key === formUser)[0]
 		if (!currentUser) {
 			// if user doesnt exist yet, create them
 			//update user
-			// console.log("filtered user: ", users.filter(element => element.key===formUser)[0]);
 			const userFoundDb = ref(realtime, `users/${formUser}`)
 			const newUserInfo = {
 				user: formUser,
@@ -144,7 +131,6 @@ function App() {
 			}
 			const foundDb = ref(realtime, newLocation)
 			update(foundDb, newUserInfo)
-			// console.log("during onFinding, new location: " + newLocation)
 			// change points around for users
 			// award a point to the form user who found the comment
 			const userFoundDb = ref(realtime, `users/${formUser}`)
@@ -167,20 +153,17 @@ function App() {
 
 			setCurrentLocation(newLocation)
 		}
-		// console.log("during onFinding, current location: " + currentLocation);
 	}
 
 	const onBack = () => {
 		if (currentLocation !== 'comments/') {
 			let tempArray = currentLocation.split('/')
-			// console.log("during onBack, tempArray:" + tempArray);
+			// remove the empty element
 			tempArray.pop()
+			// remove the subfolder, could just set to comments/ but I want this functionality for if I add sub sub folders etc
 			tempArray.pop()
-			// console.log(tempArray);
 			const newLocation = tempArray.join('/') + `/`
-			// console.log("during onBack, new location: " + newLocation)
 			setCurrentLocation(newLocation)
-			// may need to force an update just to cause onValue to trigger?
 		}
 	}
 
@@ -196,7 +179,6 @@ function App() {
 				tempArray.push(userComment)
 			}
 		}
-		// console.log("temp array: ", tempArray);
 		return tempArray
 	}
 
@@ -209,7 +191,6 @@ function App() {
 			tempArray.pop()
 			// get the current node we're on, by first removing the empty entry after /, then removing the highest node
 			const currentNode = tempArray.pop()
-			// console.log("filter array: ", tempArray);
 			return element.key === currentNode
 		}
 	}
@@ -224,26 +205,21 @@ function App() {
 
 	const highestFound = (prev, cur) => {
 		if (prev.userData.foundPoints >= cur.userData.foundPoints) {
-			// console.log("prev: ", prev);
 			return prev
 		} else {
-			// console.log("cur: ", cur);
 			return cur
 		}
 	}
 
 	const highestUndiscovered = (prev, cur) => {
 		if (prev.userData.undiscoveredPoints >= cur.userData.undiscoveredPoints) {
-			// console.log("prev: ", prev);
 			return prev
 		} else {
-			// console.log("cur: ", cur);
 			return cur
 		}
 	}
 
 	const displayHighScore = () => {
-		// console.log("users: ", users);
 		return (
 			<ul>
 				<li key={users.reduce(highestFound).key + "found"} className="foundHigh">
@@ -286,7 +262,7 @@ function App() {
 				(users.filter(user => user.key === formUser).length > 0) ? <CurrentUserInfo user={users.filter(user => user.key === formUser)[0]} /> : ''
 			}
 			{
-				notTop() ? <button onClick={(event) => { onBack() }}>Back</button> : ''
+				notTop() ? <button onClick={() => { onBack() }}>Back</button> : ''
 			}
 			<ul>
 				{
