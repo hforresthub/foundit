@@ -1,3 +1,7 @@
+* {
+	margin: 0;
+	padding: 0;
+}
 .App {
   text-align: center;
 }
@@ -73,11 +77,12 @@ p {
 	border-radius: 10px;
 }
 .inRoom {
-	height: 40vh;
 	background-color: white;
 	/* https://freesvg.org/room-interior */
 	background-image: url('./saladeestar.svg');
 	background-size: cover;
 	border: 2px solid darkgrey;
 	border-radius: 50px;
+	min-height: 40vh;
+	height: fit-content;
 }
