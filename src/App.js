@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 import realtime from './firebase'
 import { ref, onValue, push, update } from "firebase/database";
 import './App.css';
-import RoomItem from './RoomItem.js'
+import Room from './Room.js'
+import CurrentUserInfo from './CurrentUserInfo.js'
 
 function App() {
 	const [comments, setComments] = useState([])
@@ -11,7 +12,6 @@ function App() {
 	const [currentLocation, setCurrentLocation] = useState('comments/')
 	const [formUser, setFormUser] = useState('')
 	const [formComment, setFormComment] = useState('')
-	// console.log("testing: ", currentLocation);
 
 	// watch comment data
 	useEffect(() => {
@@ -247,10 +247,12 @@ function App() {
 		return (
 			<ul>
 				<li key={users.reduce(highestFound).key + "found"} className="foundHigh">
-					<p>{users.reduce(highestFound).userData.user} found points: {users.reduce(highestFound).userData.foundPoints}</p>
+					<h2>Found the most:</h2>
+					<p>{users.reduce(highestFound).userData.user}, found points: {users.reduce(highestFound).userData.foundPoints}</p>
 				</li>
 				<li key={users.reduce(highestUndiscovered).key + "undiscovered"} className="undiscoveredHigh">
-					<p>{users.reduce(highestUndiscovered).userData.user} undiscovered points: {users.reduce(highestUndiscovered).userData.undiscoveredPoints}</p>
+					<h2>Has the most undiscovered:</h2>
+					<p>{users.reduce(highestUndiscovered).userData.user}, undiscovered points: {users.reduce(highestUndiscovered).userData.undiscoveredPoints}</p>
 				</li>
 			</ul>
 		)
@@ -258,44 +260,39 @@ function App() {
 
 	return (
 		<div className="App">
-			<header className="searchHeader">
-				<img src={searchLogo} className="searchLogo" alt="Magnifying glass logo" />
-				<h1>
-					Foundit
-				</h1>
-			</header>
-			<form onSubmit={handleSubmit}>
-				<label htmlFor="user">Username:</label>
-				<input type="text" id="user" value={formUser} onChange={handleChangeUser}></input>
-				<label htmlFor="comment">comment:</label>
-				<input type="text" id="comment" value={formComment} onChange={handleChangeComment}></input>
-				<button>Post</button>
-			</form>
-			<p>{currentLocation}</p>
-			<button onClick={(event) => { onBack() }}>Back</button>
-			<div className="userData">
-				{
-					users.length > 0 ? displayHighScore() : ''
-				}
+			<div className="topBar">
+				<div className="foundit">
+					<header className="searchHeader">
+						<img src={searchLogo} className="searchLogo" alt="Magnifying glass logo" />
+						<h1>
+							Foundit
+						</h1>
+					</header>
+					<form onSubmit={handleSubmit}>
+						<label htmlFor="user">Username:</label>
+						<input type="text" id="user" value={formUser} onChange={handleChangeUser} required></input>
+						<label htmlFor="comment">comment:</label>
+						<input type="text" id="comment" value={formComment} onChange={handleChangeComment} required></input>
+						<button>Post</button>
+					</form>
+				</div>
+				<div className="userData">
+					{
+						users.length > 0 ? displayHighScore() : ''
+					}
+				</div>
 			</div>
+			{
+				(users.filter(user => user.key === formUser).length > 0) ? <CurrentUserInfo user={users.filter(user => user.key === formUser)[0]} /> : ''
+			}
+			{
+				notTop() ? <button onClick={(event) => { onBack() }}>Back</button> : ''
+			}
 			<ul>
 				{
 					comments.filter((element) => { return isCurrentLocation(element) }).map((element) => {
 						return (
-							<li key={element.key} onClick={() => onFinding(element)} className={element.key}>
-								<p className={element.newComment.found ? "found topLevel" : "undiscovered topLevel"} >{element.newComment.user} created room: {element.newComment.userComment}	</p>
-								<ul className="inRoom">
-									{
-										element.newComment && notTop() ?
-											outputArray(element.newComment).map((subElement, index) => {
-												return (
-													<RoomItem key={subElement.key} clickFunction={onFinding} clickParam={subElement} pClass={subElement.newComment.found ? "found2" : "undiscovered2"} user={subElement.newComment.user} userComment={subElement.newComment.userComment} />
-												)
-											})
-											: ''
-									}
-								</ul>
-							</li>
+							<Room key={element.key} element={element} passFunction={onFinding} notTop={notTop} outputArray={outputArray} />
 						)
 					})}
 			</ul>

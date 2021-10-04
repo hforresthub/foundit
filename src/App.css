@@ -3,12 +3,12 @@
 	padding: 0;
 }
 .App {
-  text-align: center;
+	text-align: center;
 }
-
 .searchLogo {
   height: 20vmin;
   padding: 1%;
+  margin: 5%;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -31,8 +31,31 @@
 
 
 /* my styling */
-.wrapper, ul {
+.foundit {
 	display: flex;
+	flex-direction: column;
+	width: 30%;
+}
+form {
+	display: flex;
+	flex-direction: column;
+}
+header {
+	width: 30%;
+}
+.wrapper, ul, .topBar {
+	display: flex;
+}
+.userData {
+	display: flex;
+	width: 70%;
+	align-items: center;
+}
+.userData ul {
+	display: flex;
+	width: 100%;
+	justify-content: space-evenly;
+	align-items: center;
 }
 ul {
 	justify-content: space-evenly;
@@ -42,6 +65,7 @@ ul, li {
 	list-style: none;
 	filter: drop-shadow(10px 10px 4px lightgrey);
 	opacity: 1;
+	padding: 1%;
 }
 p {
 	padding: 1rem;
@@ -85,4 +109,11 @@ p {
 	border-radius: 50px;
 	min-height: 40vh;
 	height: fit-content;
+}
+
+@media (min-width: 1000px) {
+	body {
+		width: 1000px;
+		margin: auto;
+	}
 }
