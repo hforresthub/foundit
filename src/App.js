@@ -135,7 +135,7 @@ function App() {
 		const currentNode = tempArray.pop()
 		const newLocation = `${currentLocation}${element.key}/`
 		// if the current user isnt the one who made this room/comment, set this room/comment as found and reward the user with a point
-		if (currentNode !== element.key && element.newComment.user !== formUser && formUser !== '') {
+		if (currentNode !== element.key && element.newComment.user !== formUser && formUser !== '' && !element.newComment.found) {
 
 			const newUserInfo = {
 				user: element.newComment.user,
