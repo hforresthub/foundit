@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import realtime from './firebase'
 import { ref, onValue, push, update } from "firebase/database";
 import './App.css';
+import RoomItem from './RoomItem.js'
 
 function App() {
 	const [comments, setComments] = useState([])
@@ -286,11 +287,9 @@ function App() {
 								<ul className="inRoom">
 									{
 										element.newComment && notTop() ?
-											outputArray(element.newComment).map((subElement) => {
+											outputArray(element.newComment).map((subElement, index) => {
 												return (
-													<li key={subElement.newComment.key} onClick={() => onFinding(subElement)}>
-														<p className={subElement.newComment.found ? "found2" : "undiscovered2"} >{subElement.newComment.user} says: {subElement.newComment.userComment}	</p>
-													</li>
+													<RoomItem key={subElement.key} clickFunction={onFinding} clickParam={subElement} pClass={subElement.newComment.found ? "found2" : "undiscovered2"} user={subElement.newComment.user} userComment={subElement.newComment.userComment} />
 												)
 											})
 											: ''
