@@ -48,7 +48,8 @@ body {
 .foundit {
 	display: flex;
 	flex-direction: column;
-	width: 30%;
+	width: 26%;
+	margin-left: 4%;
 }
 form {
 	display: flex;
@@ -86,6 +87,9 @@ p {
 	border-radius: 1rem;
 	margin: 1rem;
 }
+.found, .found2, .undiscovered, .undiscovered2, .currentUser, .foundHigh, .undiscoveredHigh {
+	border: 2px solid darkgrey;
+}
 .found {
 	background-color: green;
 	color: white;
@@ -105,13 +109,11 @@ p {
 .foundHigh {
 	background-color: darkgreen;
 	color: whitesmoke;
-	border: 2px solid darkgrey;
 	border-radius: 10px;
 }
 .undiscoveredHigh {
 	background-color: grey;
 	color: whitesmoke;
-	border: 2px solid darkgrey;
 	border-radius: 10px;
 }
 .inRoom {
@@ -124,12 +126,19 @@ p {
 	min-height: 40vh;
 	height: fit-content;
 }
+.currentUser {
+	font-size: 2rem;
+	text-shadow: 2px 2px 2px green;
+	background-color: lightgray;
+	margin-top: 5%;
+}
 
 @media (max-width: 500px) {
-	*, * header, * .foundit, * .userData {
+	*, * header, * .foundit, * .userData, * p {
 		font-size: 1rem;
 		flex-direction: column;
 		width: 100%;
+		margin: 0;
 	}
 	body {
 		width: 96%;

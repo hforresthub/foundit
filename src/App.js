@@ -253,9 +253,9 @@ function App() {
 					<form onSubmit={handleSubmit}>
 						<label htmlFor="user">Username:</label>
 						<input type="text" id="user" value={formUser} onChange={handleChangeUser} required></input>
-						<label htmlFor="comment">comment:</label>
+						<label htmlFor="comment">{notTop() ? 'Comment' : 'Room name'}</label>
 						<input type="text" id="comment" value={formComment} onChange={handleChangeComment} required></input>
-						<button>Post</button>
+						<button>{notTop() ? 'Post comment' : 'Create room'}</button>
 					</form>
 				</div>
 				<div className="userData">
