@@ -229,11 +229,11 @@ function App() {
 		return (
 			<ul>
 				<li key={users.reduce(highestFound).key + "found"} className="foundHigh">
-					<h2>Found the most:</h2>
+					<h2>Founderest:</h2>
 					<p>{users.reduce(highestFound).userData.user}, found points: {users.reduce(highestFound).userData.foundPoints}</p>
 				</li>
 				<li key={users.reduce(highestUndiscovered).key + "undiscovered"} className="undiscoveredHigh">
-					<h2>Has the most undiscovered:</h2>
+					<h2>Undiscovered country:</h2>
 					<p>{users.reduce(highestUndiscovered).userData.user}, undiscovered points: {users.reduce(highestUndiscovered).userData.undiscoveredPoints}</p>
 				</li>
 			</ul>
@@ -258,10 +258,16 @@ function App() {
 						<button>{notTop() ? 'Post comment' : 'Create room'}</button>
 					</form>
 				</div>
-				<div className="userData">
-					{
-						users.length > 0 ? displayHighScore() : ''
-					}
+				<div className="information">
+					<div className="userData">
+						{
+							users.length > 0 ? displayHighScore() : ''
+						}
+					</div>
+					<div className="description">
+						<p>{!notTop() ? 'Enter a username and then create a room to chat in.  Every room you create that no one has found yields 1 undiscovered point until it is found.  Every room of someone else that you are the first to click gains you a found point.' : 'Enter a username and then post a comment to chat.  Every comment you create that no one has found yields 1 undiscovered point until it is found.  Every comment of someone else that you are the first to click gains you a found point.'}</p>
+						<p>{!notTop() ? 'Click a room to enter it.' : 'Click back to try another room.'}</p>
+					</div>
 				</div>
 			</div>
 			{

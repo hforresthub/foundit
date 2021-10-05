@@ -10,40 +10,25 @@ html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}bo
 	margin: 0;
 	padding: 0;
 }
+html {
+	font-size: 125%;
+}
 body {
 	margin: 0 1%;
 }
 .App {
 	text-align: center;
-}
-.searchLogo {
-  height: 20vmin;
-  padding: 1%;
-  margin: 0 5%;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .searchLogo {
-	animation: searchMove infinite 5s linear;
-  }
-}
-
-@keyframes searchMove {
-	0% {
-		transform: rotate(-15deg);
-	}
-	50% {
-		transform: rotate(15deg);
-	}
-	100% {
-		transform: rotate(-15deg);
-	}
-}
-
-
-/* my styling */
-.App {
 	background: whitesmoke;
+	padding: 0 3%;
+}
+.information {
+	display: flex;
+	flex-direction: column;
+	width: 70%;
+}
+.userData ul {
+	display: flex;
+	flex-direction: row;
 }
 .foundit {
 	display: flex;
@@ -63,14 +48,14 @@ header {
 }
 .userData {
 	display: flex;
-	width: 70%;
-	align-items: center;
+	width: 100%;
+	align-items: flex-start;
 }
 .userData ul {
 	display: flex;
 	width: 100%;
 	justify-content: space-evenly;
-	align-items: center;
+	/* align-items: center; */
 }
 ul {
 	justify-content: space-evenly;
@@ -78,7 +63,7 @@ ul {
 }
 ul, li {
 	list-style: none;
-	filter: drop-shadow(10px 10px 4px lightgrey);
+	filter: drop-shadow(10px 10px 4px rgba(161, 161, 161, 0.445));
 	opacity: 1;
 	padding: 1%;
 }
@@ -95,7 +80,7 @@ p {
 	color: white;
 }
 .undiscovered {
-	background-color: darkgrey;
+	background-color: lightgray;
 	color: black;
 }
 .found2 {
@@ -106,19 +91,39 @@ p {
 	background-color: grey;
 	color: lightgray;
 }
-.foundHigh {
-	background-color: darkgreen;
+.foundHigh, .undiscoveredHigh {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 	color: whitesmoke;
 	border-radius: 10px;
+	width: 50%;
+	text-shadow: 2px 2px 2px black;
+}
+.foundHigh {
+	background: linear-gradient(-45deg, rgb(46, 66, 50), rgb(120, 158, 130), rgb(46, 66, 47), rgb(46, 66, 50));
+	background-size: 1000% 100%;
+	animation: gradient 15s ease infinite;
 }
 .undiscoveredHigh {
-	background-color: grey;
-	color: whitesmoke;
-	border-radius: 10px;
+	background: linear-gradient(-45deg, rgb(70, 72, 73), rgb(158, 158, 158), rgb(68, 68, 68), rgb(58, 58, 58));
+	background-size: 1000% 100%;
+	animation: gradient 15s ease infinite;
+}
+@keyframes gradient {
+	0% {
+		background-position: 0% 100%;;
+	}
+	50% {
+		background-position: 100% 50%;;
+	}
+	100% {
+		background-position: 0% 100%;;
+	}
 }
 .inRoom {
 	background-color: white;
-	/* https://freesvg.org/room-interior */
+	/* svg gotten from https://freesvg.org/room-interior */
 	background-image: url('./saladeestar.svg');
 	background-size: cover;
 	border: 2px solid darkgrey;
@@ -128,13 +133,36 @@ p {
 }
 .currentUser {
 	font-size: 2rem;
-	text-shadow: 2px 2px 2px green;
+	text-shadow: 2px 2px 2px whitesmoke;
 	background-color: lightgray;
 	margin-top: 5%;
 }
 
+/* logo */
+.searchLogo {
+	height: 20vmin;
+	padding: 1%;
+	margin: 0 5%;
+}
+@media (prefers-reduced-motion: no-preference) {
+	.searchLogo {
+		animation: searchMove infinite 5s linear;
+	}
+}
+@keyframes searchMove {
+	0% {
+		transform: rotate(-15deg);
+	}
+	50% {
+		transform: rotate(15deg);
+	}
+	100% {
+		transform: rotate(-15deg);
+	}
+}
+
 @media (max-width: 500px) {
-	*, * header, * .foundit, * .userData, * p {
+	*, * header, * .foundit, * .information, * p {
 		font-size: 1rem;
 		flex-direction: column;
 		width: 100%;
