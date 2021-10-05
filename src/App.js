@@ -224,7 +224,7 @@ function App() {
 		}
 	}
 
-	// displays the users with the highest scores in both categories
+	// displays the users with the highest scores in both categories 
 	const displayHighScore = () => {
 		return (
 			<ul>
