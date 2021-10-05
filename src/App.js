@@ -7,6 +7,7 @@ import Room from './Room.js'
 import CurrentUserInfo from './CurrentUserInfo.js'
 
 function App() {
+	// state variables
 	const [comments, setComments] = useState([])
 	const [users, setUsers] = useState([])
 	const [currentLocation, setCurrentLocation] = useState('comments/')
@@ -53,6 +54,7 @@ function App() {
 		})
 	}, [])
 
+	// handles submit of the form, and creates a room or item as appropriate
 	const handleSubmit = (event) => {
 		event.preventDefault()
 		// form logic
@@ -195,6 +197,7 @@ function App() {
 		}
 	}
 
+	// returns true when we're in a room, as opposed to the top level of the comments part of the database
 	const notTop = () => {
 		if (currentLocation === "comments/") {
 			return false
@@ -203,6 +206,7 @@ function App() {
 		}
 	}
 
+	// reduce function for the array to find the user with the highest found points
 	const highestFound = (prev, cur) => {
 		if (prev.userData.foundPoints >= cur.userData.foundPoints) {
 			return prev
@@ -211,6 +215,7 @@ function App() {
 		}
 	}
 
+	// reduce function for the array to find the user with the highest undiscovered points
 	const highestUndiscovered = (prev, cur) => {
 		if (prev.userData.undiscoveredPoints >= cur.userData.undiscoveredPoints) {
 			return prev
@@ -219,6 +224,7 @@ function App() {
 		}
 	}
 
+	// displays the users with the highest scores in both categories
 	const displayHighScore = () => {
 		return (
 			<ul>
