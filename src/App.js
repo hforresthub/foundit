@@ -295,6 +295,7 @@ function App() {
 						)
 					})}
 			</ul>
+			<footer><a href='https://www.junocollege.com' >Created at Juno College 2021</a></footer>
 		</div>
 	);
 }
