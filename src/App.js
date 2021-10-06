@@ -54,6 +54,11 @@ function App() {
 		})
 	}, [])
 
+	// return true if name is acceptable, false if it contains illegal characters
+	const acceptableName = (tryingName) => {
+		return !tryingName.includes('.') && !tryingName.includes('#') && !tryingName.includes('$') && !tryingName.includes('[') && !tryingName.includes(']')
+	}
+
 	// handles submit of the form, and creates a room or item as appropriate
 	const handleSubmit = (event) => {
 		event.preventDefault()
@@ -62,7 +67,8 @@ function App() {
 
 		// check if user exists, if not, create them
 		let currentUser = users.filter(element => element.key === formUser)[0]
-		if (!currentUser) {
+		// dont allow usernames with illegal characters in them
+		if (!currentUser && acceptableName(formUser)) {
 			// if user doesnt exist yet, create them
 			//update user
 			const userFoundDb = ref(realtime, `users/${formUser}`)
@@ -73,25 +79,27 @@ function App() {
 			}
 			update(userFoundDb, newUserInfo)
 			currentUser = { key: formUser, userData: newUserInfo }
+		} else if (!acceptableName(formUser)) {
+			alert("Name contains illegal character(s), try another without any of the following: . # $ [ ]")
+		} else if (acceptableName(formUser)) {
+			const foundDb = ref(realtime, currentLocation)
+			push(foundDb, {
+				user: formUser,
+				userComment: formComment,
+				found: false
+			});
+			//clear after
+			setFormComment('')
+	
+			//update user
+			const userFoundDb = ref(realtime, `users/${formUser}`)
+			const newUserInfo = {
+				user: formUser,
+				// foundPoints: currentUser.userData.foundPoints + 1,
+				undiscoveredPoints: currentUser.userData.undiscoveredPoints + 1,
+			}
+			update(userFoundDb, newUserInfo)
 		}
-
-		const foundDb = ref(realtime, currentLocation)
-		push(foundDb, {
-			user: formUser,
-			userComment: formComment,
-			found: false
-		});
-		//clear after
-		setFormComment('')
-
-		//update user
-		const userFoundDb = ref(realtime, `users/${formUser}`)
-		const newUserInfo = {
-			user: formUser,
-			// foundPoints: currentUser.userData.foundPoints + 1,
-			undiscoveredPoints: currentUser.userData.undiscoveredPoints + 1,
-		}
-		update(userFoundDb, newUserInfo)
 	}
 
 	const handleChangeUser = function (event) {
@@ -106,7 +114,7 @@ function App() {
 	// need to stop this from creating a duplicate of itself as a child
 	const onFinding = (element) => {
 		let currentUser = users.filter(user => user.key === formUser)[0]
-		if (!currentUser) {
+		if (!currentUser && acceptableName(formUser)) {
 			// if user doesnt exist yet, create them
 			//update user
 			const userFoundDb = ref(realtime, `users/${formUser}`)
@@ -117,6 +125,9 @@ function App() {
 			}
 			update(userFoundDb, newUserInfo)
 			currentUser = { key: formUser, userData: newUserInfo }
+		} else if (!acceptableName(formUser))
+		{
+			alert("Name contains illegal character(s), try another without any of the following: . # $ [ ]")
 		}
 		const oldLocation = currentLocation
 		let tempArray = currentLocation.split('/')
@@ -124,7 +135,7 @@ function App() {
 		const currentNode = tempArray.pop()
 		const newLocation = `${currentLocation}${element.key}/`
 		// if the current user isnt the one who made this room/comment, set this room/comment as found and reward the user with a point
-		if (currentNode !== element.key && element.newComment.user !== formUser && formUser !== '' && !element.newComment.found) {
+		if (currentNode !== element.key && element.newComment.user !== formUser && formUser !== '' && !element.newComment.found && acceptableName(formUser)) {
 
 			const newUserInfo = {
 				user: element.newComment.user,
@@ -151,7 +162,7 @@ function App() {
 		} else if (formUser === '') {
 			alert('Please enter a Username!')
 		}
-		if (oldLocation === "comments/" && formUser !== '') {
+		if (oldLocation === "comments/" && formUser !== '' && acceptableName(formUser)) {
 
 			setCurrentLocation(newLocation)
 		}
