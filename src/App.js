@@ -1,10 +1,11 @@
+// all the imports
 import searchLogo from './search.svg'
 import { useState, useEffect } from 'react';
 import realtime from './firebase'
 import { ref, onValue, push, update } from "firebase/database";
 import './App.css';
 import Room from './Room.js'
-import CurrentUserInfo from './CurrentUserInfo.js'
+import CurrentUserInfo from './CurrentUserInfo'
 
 function App() {
 	// state variables
@@ -95,7 +96,6 @@ function App() {
 			const userFoundDb = ref(realtime, `users/${formUser}`)
 			const newUserInfo = {
 				user: formUser,
-				// foundPoints: currentUser.userData.foundPoints + 1,
 				undiscoveredPoints: currentUser.userData.undiscoveredPoints + 1,
 			}
 			update(userFoundDb, newUserInfo)
@@ -250,7 +250,8 @@ function App() {
 			</ul>
 		)
 	}
-
+	
+	// main JSX to display
 	return (
 		<div className="App">
 			<div className="topBar">
@@ -264,7 +265,7 @@ function App() {
 					<form onSubmit={handleSubmit}>
 						<label htmlFor="user">Username:</label>
 						<input type="text" id="user" value={formUser} onChange={handleChangeUser} required></input>
-						<label htmlFor="comment">{notTop() ? 'Comment' : 'Room name'}</label>
+						<label htmlFor="comment">{notTop() ? 'Comment:' : 'Room name:'}</label>
 						<input type="text" id="comment" value={formComment} onChange={handleChangeComment} required></input>
 						<button>{notTop() ? 'Post comment' : 'Create room'}</button>
 					</form>
@@ -285,7 +286,7 @@ function App() {
 				(users.filter(user => user.key === formUser).length > 0) ? <CurrentUserInfo user={users.filter(user => user.key === formUser)[0]} /> : ''
 			}
 			{
-				notTop() ? <button onClick={() => { onBack() }}>Back</button> : ''
+				notTop() ? <button onClick={() => { onBack() }}>back</button> : ''
 			}
 			<ul>
 				{
@@ -295,7 +296,7 @@ function App() {
 						)
 					})}
 			</ul>
-			<footer><a href='https://www.junocollege.com' >Created at Juno College 2021</a></footer>
+			<footer><a href='https://www.junocollege.com' >Created by Hal Forrest at Juno College 2021</a></footer>
 		</div>
 	);
 }

@@ -1,3 +1,4 @@
+// Component to display an item in a room
 const RoomItem = (props) => {
 
 	return (

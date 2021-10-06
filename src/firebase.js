@@ -1,10 +1,8 @@
-// not currently using this since cant figure out how to use as import yet
-
+// accessing firebase
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from "firebase/database";
 
 // Set the configuration for your app
-// TODO: Replace with your project's config object
 const firebaseConfig = {
 	apiKey: "AIzaSyCUGFYAM5PWhvdUkRlCp_HT9m4rvHHSLAM",
 	authDomain: "foundit-a9c81.firebaseapp.com",

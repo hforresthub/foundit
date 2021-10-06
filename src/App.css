@@ -6,6 +6,7 @@ html{line-height:1.15;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}bo
 
 .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; border: 0; padding: 0; white-space: nowrap; clip-path: inset(100%); clip: rect(0 0 0 0); overflow: hidden;}
 
+/* GENERAL */
 * {
 	margin: 0;
 	padding: 0;
@@ -19,43 +20,47 @@ body {
 .App {
 	text-align: center;
 	background: whitesmoke;
-	padding: 0 3%;
-}
-.information {
-	display: flex;
-	flex-direction: column;
-	width: 70%;
-}
-.userData ul {
-	display: flex;
-	flex-direction: row;
+	padding: 2% 0 0 0;
 }
 .foundit {
 	display: flex;
 	flex-direction: column;
-	width: 26%;
+	width: 31%;
 	margin-left: 4%;
 }
-form {
+header {
+	width: 35%;
+}
+h1 {
+	font-size: 3rem;
+	color: rgb(42, 131, 42);
+	text-shadow: 1px 1px 1px rgb(121, 172, 121), 2px 2px 1px whitesmoke,3px 3px 1px rgb(175, 175, 175),
+	4px 4px 1px rgb(80, 80, 80);
+}
+.wrapper, ul, .topBar, .information, .userData, .userData ul, form, .foundHigh, .undiscoveredHigh {
 	display: flex;
+}
+form {
 	flex-direction: column;
 }
-header {
-	width: 30%;
+button {
+	padding: 2%;
+	margin: 2%;
 }
-.wrapper, ul, .topBar {
-	display: flex;
+.information {
+	flex-direction: column;
+	width: 65%;
 }
 .userData {
-	display: flex;
 	width: 100%;
 	align-items: flex-start;
 }
 .userData ul {
+	flex-direction: row;
+	padding: 0 3%;
 	display: flex;
 	width: 100%;
 	justify-content: space-evenly;
-	/* align-items: center; */
 }
 ul {
 	justify-content: space-evenly;
@@ -72,11 +77,12 @@ p {
 	border-radius: 1rem;
 	margin: 1rem;
 }
+/* CHANGING STYLES */
 .found, .found2, .undiscovered, .undiscovered2, .currentUser, .foundHigh, .undiscoveredHigh {
 	border: 2px solid darkgrey;
 }
 .found {
-	background-color: green;
+	background-color: rgb(33, 98, 33);
 	color: white;
 }
 .undiscovered {
@@ -91,8 +97,15 @@ p {
 	background-color: grey;
 	color: lightgray;
 }
+.found:hover {
+	background-color: rgb(40, 117, 40);
+	color:rgb(189, 255, 177)
+}
+.undiscovered:hover, .undiscovered2:hover {
+	background-color: rgb(0, 255, 0);
+	color:rgb(36, 36, 36)
+}
 .foundHigh, .undiscoveredHigh {
-	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 	color: whitesmoke;
@@ -127,7 +140,7 @@ p {
 	background-image: url('./saladeestar.svg');
 	background-size: cover;
 	border: 2px solid darkgrey;
-	border-radius: 50px;
+	border-radius: 10px;
 	min-height: 40vh;
 	height: fit-content;
 }
@@ -137,12 +150,19 @@ p {
 	background-color: lightgray;
 	margin-top: 5%;
 }
+footer {
+	background-color: rgb(36, 36, 36);
+	margin-top: 10%;
+}
+footer a {
+	color: whitesmoke;
+}
 
 /* logo */
 .searchLogo {
 	height: 20vmin;
-	padding: 1%;
-	margin: 0 5%;
+	margin: 10%;
+	filter: drop-shadow(1px 1px 1px rgba(0, 155, 21, 0.726)) drop-shadow(12px 6px 12px rgba(55, 114, 58, 0.726)) ;
 }
 @media (prefers-reduced-motion: no-preference) {
 	.searchLogo {
@@ -151,16 +171,23 @@ p {
 }
 @keyframes searchMove {
 	0% {
-		transform: rotate(-15deg);
+		transform: rotate(-15deg) scale(1, 1);
+	}
+	25% {
+		transform: rotate(0deg) scale(0.85, 0.85);
 	}
 	50% {
-		transform: rotate(15deg);
+		transform: rotate(15deg) scale(1, 1);
+	}
+	75% {
+		transform: rotate(0deg) scale(0.85, 0.85);
 	}
 	100% {
-		transform: rotate(-15deg);
+		transform: rotate(-15deg) scale(1, 1);
 	}
 }
 
+/* MEDIA QUERIES */
 @media (max-width: 500px) {
 	*, * header, * .foundit, * .information, * p {
 		font-size: 1rem;
@@ -172,9 +199,21 @@ p {
 		width: 96%;
 		margin: 0 2%
 	}
+	h1 {
+		font-size: 2rem;
+	}
+	p.currentUser {
+		font-size: 1rem;
+	}
 	.searchLogo {
 		height: 100px;
 		width: 100px;
+	}
+}
+
+@media (max-width: 900px) {
+	h1 {
+		font-size: 2rem;
 	}
 }
 

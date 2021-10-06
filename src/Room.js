@@ -1,5 +1,6 @@
 import RoomItem from './RoomItem.js'
 
+// Component to display rooms
 const Room = (props) => {
 	return (
 		<li onClick={() => props.passFunction(props.element)} className={props.element.key}>
