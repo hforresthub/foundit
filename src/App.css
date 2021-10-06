@@ -45,7 +45,7 @@ form {
 }
 button {
 	padding: 2%;
-	margin: 2%;
+	margin: 2% 0;
 }
 .information {
 	flex-direction: column;
@@ -217,9 +217,9 @@ footer a {
 	}
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 1440px) {
 	body {
-		width: 1000px;
+		width: 1440px;
 		margin: auto;
 	}
 }
