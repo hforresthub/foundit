@@ -205,9 +205,23 @@ footer a {
 	p.currentUser {
 		font-size: 1rem;
 	}
+	.foundHigh p, .undiscoveredHigh p {
+		margin: 0;
+		padding: 0;
+	}
 	.searchLogo {
 		height: 100px;
 		width: 100px;
+	}
+}
+
+@media (max-width: 700px) {
+	.undiscoveredHigh h2, .foundHigh h2 {
+		font-size: 1rem;
+	}
+	.undiscoveredHigh p, .foundHigh p {
+		margin: 0;
+		padding: 0;
 	}
 }
 
