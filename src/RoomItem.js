@@ -2,7 +2,7 @@
 const RoomItem = (props) => {
 
 	return (
-		<li onClick={() => props.clickFunction(props.clickParam)}>
+		<li tabIndex='0' role='button' onClick={() => props.clickFunction(props.clickParam)}>
 			<p className={props.pClass} >{props.user} says: {props.userComment}	</p>
 		</li>
 	)

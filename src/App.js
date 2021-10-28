@@ -91,7 +91,7 @@ function App() {
 			});
 			//clear after
 			setFormComment('')
-	
+
 			//update user
 			const userFoundDb = ref(realtime, `users/${formUser}`)
 			const newUserInfo = {
@@ -125,8 +125,7 @@ function App() {
 			}
 			update(userFoundDb, newUserInfo)
 			currentUser = { key: formUser, userData: newUserInfo }
-		} else if (!acceptableName(formUser))
-		{
+		} else if (!acceptableName(formUser)) {
 			alert("Name contains illegal character(s), try another without any of the following: . # $ [ ]")
 		}
 		const oldLocation = currentLocation
@@ -250,52 +249,54 @@ function App() {
 			</ul>
 		)
 	}
-	
+
 	// main JSX to display
 	return (
 		<div className="App">
-			<div className="topBar">
-				<div className="foundit">
-					<header className="searchHeader">
-						<img src={searchLogo} className="searchLogo" alt="Magnifying glass logo" />
-						<h1>
-							Foundit
-						</h1>
-					</header>
-					<form onSubmit={handleSubmit}>
-						<label htmlFor="user">Username:</label>
-						<input type="text" id="user" value={formUser} onChange={handleChangeUser} required></input>
-						<label htmlFor="comment">{notTop() ? 'Comment:' : 'Room name:'}</label>
-						<input type="text" id="comment" value={formComment} onChange={handleChangeComment} required></input>
-						<button>{notTop() ? 'Post comment' : 'Create room'}</button>
-					</form>
-				</div>
-				<div className="information">
-					<div className="userData">
-						{
-							users.length > 0 ? displayHighScore() : ''
-						}
+			<main>
+				<div className="topBar">
+					<div className="foundit">
+						<header className="searchHeader">
+							<img src={searchLogo} className="searchLogo" alt="Magnifying glass logo" />
+							<h1>
+								Foundit
+							</h1>
+						</header>
+						<form onSubmit={handleSubmit}>
+							<label htmlFor="user">Username:</label>
+							<input type="text" id="user" value={formUser} onChange={handleChangeUser} required></input>
+							<label htmlFor="comment">{notTop() ? 'Comment:' : 'Room name:'}</label>
+							<input type="text" id="comment" value={formComment} onChange={handleChangeComment} required></input>
+							<button>{notTop() ? 'Post comment' : 'Create room'}</button>
+						</form>
 					</div>
-					<div className="description">
-						<p>{!notTop() ? 'Enter a username and then create a room to chat in.  Every room you create that no one has found yields 1 undiscovered point until it is found.  Every room of someone else that you are the first to click gains you a found point.' : 'Enter a username and then post a comment to chat.  Every comment you create that no one has found yields 1 undiscovered point until it is found.  Every comment of someone else that you are the first to click gains you a found point.'}</p>
-						<p>{!notTop() ? 'Click a room to enter it.' : 'Click back to try another room.'}</p>
+					<div className="information">
+						<div className="userData">
+							{
+								users.length > 0 ? displayHighScore() : ''
+							}
+						</div>
+						<div className="description">
+							<p>{!notTop() ? 'Enter a username and then create a room to chat in.  Every room you create that no one has found yields 1 undiscovered point until it is found.  Every room of someone else that you are the first to click gains you a found point.' : 'Enter a username and then post a comment to chat.  Every comment you create that no one has found yields 1 undiscovered point until it is found.  Every comment of someone else that you are the first to click gains you a found point.'}</p>
+							<p>{!notTop() ? 'Click a room to enter it.' : 'Click back to try another room.'}</p>
+						</div>
 					</div>
 				</div>
-			</div>
-			{
-				(users.filter(user => user.key === formUser).length > 0) ? <CurrentUserInfo user={users.filter(user => user.key === formUser)[0]} /> : ''
-			}
-			{
-				notTop() ? <button onClick={() => { onBack() }}>back</button> : ''
-			}
-			<ul>
 				{
-					comments.filter((element) => { return isCurrentLocation(element) }).map((element) => {
-						return (
-							<Room key={element.key} element={element} passFunction={onFinding} notTop={notTop} outputArray={outputArray} />
-						)
-					})}
-			</ul>
+					(users.filter(user => user.key === formUser).length > 0) ? <CurrentUserInfo user={users.filter(user => user.key === formUser)[0]} /> : ''
+				}
+				{
+					notTop() ? <button onClick={() => { onBack() }}>back</button> : ''
+				}
+				<ul>
+					{
+						comments.filter((element) => { return isCurrentLocation(element) }).map((element) => {
+							return (
+								<Room key={element.key} element={element} passFunction={onFinding} notTop={notTop} outputArray={outputArray} />
+							)
+						})}
+				</ul>
+			</main>
 			<footer><a href='https://www.junocollege.com' >Created by Hal Forrest at Juno College 2021</a></footer>
 		</div>
 	);
